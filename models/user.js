@@ -16,11 +16,11 @@ module.exports = (sequelize, DataTypes) => {
 	User.init(
 		{
 			name: {
-				type: dataTypes.STRING,
+				type: DataTypes.STRING,
 				validate: {
 					len: {
 						args: [1, 99],
-						ms: 'Name must be between 1 and 99 characters'
+						msg: 'Name must be between 1 and 99 characters'
 					}
 				}
 			},
