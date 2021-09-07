@@ -17,11 +17,6 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static(__dirname + '/public'))
 app.use(layouts)
 
-app.use(flash()) // flash middleware
-
-app.use(passport.initialize()) // Initialize passport
-app.use(passport.session()) // Add a session
-
 app.use(
 	session({
 		secret: SECRET_SESSION, // What we actually will be giving the user on our site as a session cookie
@@ -29,6 +24,12 @@ app.use(
 		saveUninitialized: true // If we have a new session, we save it, therefore making that true
 	})
 )
+
+app.use(flash()) // flash middleware
+
+app.use(passport.initialize()) // Initialize passport
+app.use(passport.session()) // Add a session
+
 app.use((req, res, next) => {
 	console.log(res.locals)
 	res.locals.alerts = req.flash()
@@ -38,6 +39,12 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
 	res.render('index')
+})
+
+// Add this above /auth controllers
+app.get('/profile', isLoggedIn, (req, res) => {
+	const { id, name, email } = req.user.get()
+	res.render('profile', { id, name, email })
 })
 
 app.use('/auth', require('./controllers/auth'))
